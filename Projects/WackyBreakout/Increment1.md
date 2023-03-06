@@ -41,5 +41,39 @@ For this step, you're letting the player move the paddle.
 
 # Keep the Paddle in the PlayField
 
+### Paddle Half Width 
+- Retrieve paddle Box Collider 2d component, calculate half the width, and store it in a field. We do it for optimization.
+```
+# region Fields
+    float halfColliderWidth;
+# endregion 
+
+# region Unity methods
+    void Start()
+    {
+        BoxCollider2d bc2d = GetComponent<BoxCollider2D>();
+        halfColliderWidth = bc2d.size.x / 2;
+    }
+# endregion 
+```
+
+### CalculateClampedX Method
+- Calculate a valid new x position, including the clamping, before you call the method to move the rigid body
+```
+    float CalculateClampedX(float x)
+    {
+        if(x - halfColliderWidth < ScreenUtils.ScreenLeft)
+        {
+            x = ScreenUtils.ScreenLeft + halfColliderWidth;
+        }
+        else if (x + halfColliderWidth > ScreenUtils.ScreenRight)
+        {
+            x = ScreenUtils.ScreenRight - halfColliderWidth;
+        }
+        return x;
+    }
+```
+
+
 
 
