@@ -1,4 +1,5 @@
-## Move the Paddle
+# Move the Paddle
+
 For this step, you're letting the player move the paddle.
 
 ### Rigidbody2d Kinematic
@@ -21,5 +22,24 @@ For this step, you're letting the player move the paddle.
     }
 # endregion
 ```
+
+### Horizontal Input
+- Add code to body of the FixedUpdate method to move rigidbody of paddle based on input on the Horizontal input axis 
+```
+#region Unity methods
+    float horizontalInput = Input.GetAxis("Horizontal");
+    if(horizontalInput != 0)
+    {
+        Vector2 position = rb2d.position;
+        position.x += horizontalInput * ConfigurationUtils.PaddleMoveUnitsPerSecond * 
+            Time.deltaTime;
+        rb2d.MovePosition(position);
+    }
+#endregion
+```
+---
+
+# Keep the Paddle in the PlayField
+
 
 
