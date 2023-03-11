@@ -60,6 +60,7 @@ For this step, you're letting the player move the paddle.
 ### CalculateClampedX Method
 - Calculate a valid new x position, including the clamping, before you call the method to move the rigid body
 ```
+# region Public method
     float CalculateClampedX(float x)
     {
         if(x - halfColliderWidth < ScreenUtils.ScreenLeft)
@@ -72,6 +73,37 @@ For this step, you're letting the player move the paddle.
         }
         return x;
     }
+# endregion    
+```
+---
+
+# Move Ball
+
+### BallImpulseForce Method
+Add a public static method to ConfigurationUtils class to provide BallImpulseForce value. Return 200 from that property 
+```
+# region Properties
+    public static float BallImpulseForce
+    {
+        get {return 200;}
+    }
+# endregion
+``` 
+
+### Get Ball Moving
+Add code to Start method of Ball class to get the ball moving.
+```
+# region Unity method
+    void Start()
+    {
+        float angle = -90 * Mathf.Deg2Rad;
+        Vector2 force = new Vector(
+                ConfigurationUtils.BallImpulseForce * Mathf.Cos(angle),
+                ConfigurationUtils.BallImpulseForce * Mathf.Sin(angle));
+        GetComponent<RigidBody2d>().AddForce(force);
+    }
+#endregion
+
 ```
 
 
