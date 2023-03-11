@@ -11,16 +11,16 @@ For this step, you're letting the player move the paddle.
 ### Rigidbody2d Field
 - Add a Rigidbody2D field and add code to Start method for efficiency.
 ```
-# region Fields 
+#region Fields 
     Rigidbody2D rb2d;
-# endregion 
+#endregion 
 
-# region Unity methods
+#region Unity methods
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();
     }
-# endregion
+#endregion
 ```
 
 ### Horizontal Input
@@ -44,23 +44,23 @@ For this step, you're letting the player move the paddle.
 ### Paddle Half Width 
 - Retrieve paddle Box Collider 2d component, calculate half the width, and store it in a field. We do it for optimization.
 ```
-# region Fields
+#region Fields
     float halfColliderWidth;
-# endregion 
+#endregion 
 
-# region Unity methods
+#region Unity methods
     void Start()
     {
         BoxCollider2d bc2d = GetComponent<BoxCollider2D>();
         halfColliderWidth = bc2d.size.x / 2;
     }
-# endregion 
+#endregion 
 ```
 
 ### CalculateClampedX Method
 - Calculate a valid new x position, including the clamping, before you call the method to move the rigid body
 ```
-# region Public method
+#region Public method
     float CalculateClampedX(float x)
     {
         if(x - halfColliderWidth < ScreenUtils.ScreenLeft)
@@ -73,7 +73,7 @@ For this step, you're letting the player move the paddle.
         }
         return x;
     }
-# endregion    
+#endregion    
 ```
 ---
 
@@ -82,7 +82,7 @@ For this step, you're letting the player move the paddle.
 ### BallImpulseForce Method
 Add a public static method to ConfigurationUtils class to provide BallImpulseForce value. Return 200 from that property 
 ```
-# region Properties
+#region Properties
     public static float BallImpulseForce
     {
         get {return 200;}
@@ -93,7 +93,7 @@ Add a public static method to ConfigurationUtils class to provide BallImpulseFor
 ### Get Ball Moving
 Add code to Start method of Ball class to get the ball moving.
 ```
-# region Unity method
+#region Unity method
     void Start()
     {
         float angle = -90 * Mathf.Deg2Rad;
@@ -103,7 +103,15 @@ Add code to Start method of Ball class to get the ball moving.
         GetComponent<RigidBody2d>().AddForce(force);
     }
 #endregion
-
+```
+---
+# Curve The Paddle
+### BounceAngleHalfRange 
+In Paddle script add a BounceAngleHalfRange constant field. Set constant value to 60, converted to radians.
+```
+#region Fields
+    const float BounceAngleHalfRange = 60 * Mathf.Deg2Rad;
+#endregion
 ```
 
 
