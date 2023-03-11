@@ -92,6 +92,9 @@ Add a public static method to ConfigurationUtils class to provide BallImpulseFor
 
 ### Get Ball Moving
 Add code to Start method of Ball class to get the ball moving.
+- This code initializes a float variable named "angle" with a value of negative 90 degrees converted to radians using Math.Deg2Rad constant. It then creates a new Vector2 variable named "force" with x and y components equal to cosine and sine of teh angle variable. 
+- The cosine and sine functions return the ratio of the adjacent and hypotenuse sides, and opposite and hypotenuse sides, of a right angle triangle with given angle. In this case, since the angle is -90 (-Pi/2 radians) the cosine of the angle is 0 and the sine of the angle is -1.
+- Therefore, the "force" variable is initialized with an x component for 0 and a y component of -1, which means it points straight down in the negative y direction. This could be used, for example, to apply downward force to a physics object in game. 
 ```
 #region Unity method
     void Start()
