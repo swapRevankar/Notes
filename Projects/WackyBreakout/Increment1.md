@@ -80,7 +80,7 @@ For this step, you're letting the player move the paddle.
 # Move Ball
 
 ### BallImpulseForce Method
-Add a public static method to ConfigurationUtils class to provide BallImpulseForce value. Return 200 from that property 
+- Add a public static method to ConfigurationUtils class to provide BallImpulseForce value. Return 200 from that property 
 ```
 #region Properties
     public static float BallImpulseForce
@@ -91,7 +91,7 @@ Add a public static method to ConfigurationUtils class to provide BallImpulseFor
 ``` 
 
 ### Get Ball Moving
-Add code to Start method of Ball class to get the ball moving.
+- Add code to Start method of Ball class to get the ball moving.
 - This code initializes a float variable named "angle" with a value of negative 90 degrees converted to radians using Math.Deg2Rad constant. It then creates a new Vector2 variable named "force" with x and y components equal to cosine and sine of teh angle variable. 
 - The cosine and sine functions return the ratio of the adjacent and hypotenuse sides, and opposite and hypotenuse sides, of a right angle triangle with given angle. In this case, since the angle is -90 (-Pi/2 radians) the cosine of the angle is 0 and the sine of the angle is -1.
 - Therefore, the "force" variable is initialized with an x component for 0 and a y component of -1, which means it points straight down in the negative y direction. This could be used, for example, to apply downward force to a physics object in game. 
@@ -110,14 +110,14 @@ Add code to Start method of Ball class to get the ball moving.
 ---
 # Curve The Paddle
 ### BounceAngleHalfRange 
-In Paddle script add a BounceAngleHalfRange constant field. Set constant value to 60, converted to radians.
+- In Paddle script add a BounceAngleHalfRange constant field. Set constant value to 60, converted to radians.
 ```
 #region Fields
     const float BounceAngleHalfRange = 60 * Mathf.Deg2Rad;
 #endregion
 ```
 ### Paddle OnCollisionEnter2D
-Calculates a new vector with magnitude 1 for the new direction the ball should move in based on where the ball hit the paddle.
+- Calculates a new vector with magnitude 1 for the new direction the ball should move in based on where the ball hit the paddle.
 ```
 #region Unity method
 void OnCollisionEnter2D(Collision2D coll)
@@ -142,7 +142,7 @@ void OnCollisionEnter2D(Collision2D coll)
 
 ```
 ### Ball SetDirection
-This method should change the direction the call is moving while keeping the speed the same as it was. Current ball speed is just the magnitude of the rigidbody velocity, so setting the velocity to current speed * new direction is what you need.
+- This method should change the direction the call is moving while keeping the speed the same as it was. Current ball speed is just the magnitude of the rigidbody velocity, so setting the velocity to current speed * new direction is what you need.
 ```
 #region Public methods
 public void SetDirection(Vector2 direction)
@@ -173,7 +173,7 @@ bool TopCollision(Collision2D coll)
 #endregion
 ```
 ### Change Boolean expression
-Change the boolean expression for the if statement in the OnCollisionEnter2D method to check for both the ball tag and a top collision
+- Change the boolean expression for the if statement in the OnCollisionEnter2D method to check for both the ball tag and a top collision
 ```
 if(coll.gameObject.CompareTag("Ball") && TopCollision(coll))
 {
