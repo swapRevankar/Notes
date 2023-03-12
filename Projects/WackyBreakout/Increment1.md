@@ -116,6 +116,72 @@ In Paddle script add a BounceAngleHalfRange constant field. Set constant value t
     const float BounceAngleHalfRange = 60 * Mathf.Deg2Rad;
 #endregion
 ```
+### Paddle OnCollisionEnter2D
+Calculates a new vector with magnitude 1 for the new direction the ball should move in based on where the ball hit the paddle.
+```
+#region Unity method
+void OnCollisionEnter2D(Collision2D coll)
+{
+    if(coll.gameObject.CompareTag("Ball"))
+    {
+        // calculate new ball direction
+        float ballOffsetFromPaddleCenter = transform.position.x - coll.transform.position.x;
+        float normalizedBallOffset = ballOffsetFromPaddleCenter / halfColliderWidth;
+        float angleOffset = normalizedBallOffset * BounceAngleHalfRange;
+        // add angle offset to PI/2(90 degrees) to get new angle
+        float angle = Mathf.PI / 2 + angleOffset;
+        Vector2 direction = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+
+        // tell ball to set direction to new direction
+        Ball ballScript = coll.gameObject.GetComponent<Ball>();
+        ballScript.SetDirection(direction);
+    }
+}
+#endregion
+
+
+```
+### Ball SetDirection
+This method should change the direction the call is moving while keeping the speed the same as it was. Current ball speed is just the magnitude of the rigidbody velocity, so setting the velocity to current speed * new direction is what you need.
+```
+#region Public methods
+public void SetDirection(Vector2 direction)
+{
+    // get current rigid body speed
+    RigidBody2D rb2d = GetComponent<RigidBody2D>();
+    float speed = rb2d.velocity.magnitude;
+    rb2d.velocity = direction.speed;
+}
+#endregion
+```
+---
+# Fix Side Collision Bug
+### TopCollision
+- The Collider2D object passed in as a parameter for the OnCollisionEnter2D method provides some useful information, especially the contact points for the collision. 
+- Get 2 points for the collision and compare them. When comparing floats you don't really wanna use == for your comparison, you'll want to check if the two floats are within some tolerance of each other 
+```
+#region Private method
+bool TopCollision(Collision2D coll)
+{
+    const float tolerance = 0.05f;
+
+    // on top collision, both points are at the same y location
+    ContactPoint2D[] contacts = new ContactPoint2D[2];
+    coll.GetContacts(contacts);
+    return Mathf.Abs(contacts[0].point.y - contacts[1].point.y) < tolerance;
+}
+#endregion
+```
+### Change Boolean expression
+Change the boolean expression for the if statement in the OnCollisionEnter2D method to check for both the ball tag and a top collision
+```
+if(coll.gameObject.CompareTag("Ball") && TopCollision(coll))
+{
+    
+}
+
+```
+
 
 
 
