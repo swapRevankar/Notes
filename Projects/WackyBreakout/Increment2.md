@@ -90,4 +90,48 @@
         }
     }
 #endregion
-``` 
+```
+---
+# Add a death timer to the ball 
+Destroy the ball after a set period
+
+### Ball lifetime
+- Add a property to the ConfigurationUtils class for the ball lifetime in seconds, making the property public so the Ball class will be able to access it.
+```
+#region Properties
+public static float BallLifeSeconds
+{
+    get{ return 10;}
+}
+#endregion
+```
+
+### Timer component
+- Copy Timer script into Gameplay folder
+- Add the timer component to the Ball and run the timer with the ball lifetime as the timer duration when the Ball is added to the scene.
+```
+#region Unity method
+    void Start()
+    {
+        // start death time 
+        deathTimer = gameObject.addComponent<Timer>();
+        deathTimer.Duration = ConfigurationUtils.BallLifeSeconds;
+        deathTimer.Run();
+    }
+#endregion 
+```
+
+## Timer finished
+- Have the ball destroy itself when the timer is finished 
+```
+#region Unity method 
+    void Update()
+    {
+        if(deathTimer.Finished)
+        {
+            Destroy(gameObject);
+        }
+    }
+#endregion
+```
+
