@@ -235,4 +235,22 @@ For this step, you are making the ball wait for a second before they start movin
     }
 #endregion
 ```
+---
+# Spawn a new ball when a ball leaves the bottom of screen
+### OnBecameInvisible
+Have the Ball script call the SpawnBall method in the BallSpawner script after it detects it became invisible and before it destroys itself.
+```
+void OnBecameInvisible()
+{
+    // death timer destruction is in Update
+    float halfColliderHeight = 
+        gameObject.GetComponent<BoxCollider2D>().size.y / 2;
+    if(transform.position.y - halfColliderHeight < ScreenUtils.ScreenBottom)
+    {
+        Camera.main.GetComponent<BallSpawner>().SpawnBall();
+    }
+    Destroy(gameObject);
+}
+```
+---
 
