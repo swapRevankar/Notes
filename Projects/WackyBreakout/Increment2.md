@@ -134,4 +134,69 @@ public static float BallLifeSeconds
     }
 #endregion
 ```
+---
+# Spawn new ball into a collision free location
+### For this step you are making sure ball are spawned into collision free location. The idea behind this approach is that if I'd be spawning into a collision, I set a flag to say I need to retry to spawn and I try the spawn again on the next frame of the game if that flag is true.
+```
+#region Fields
+    bool retrySpawn = false;
+    Vector2 spawnLocationMin;
+    Vector2 spawnLocationMax;
+#endregion
+
+#region Unity methods
+    void Start()
+    {
+        // spawn and destroy ball to calculate spawn location min and max
+        GameObject tempBall = Instantiate<GameObject>(prefabBall);
+        BoxCollider2D collider = tempBall.GetComponent<BoxCollider2D>();
+        float ballColliderHalfWidth = collider.size.x / 2;
+        float ballColliderHalfHeight = collider.size.y / 2;
+
+        spawnLocationMin = new Vector2(
+            tempBall.transform.position.x - ballColliderHalfWidth,
+            tempBall.transform.position.y - ballColliderHalfHeight);
+        
+        spawnLocationMax = new Vector2(
+            tempBall.transform.position.x + ballColliderHalfWidth,
+            tempBall.transform.position.y + ballColliderHalfHeight);
+        Destroy(tempBall);
+
+        // spawn first ball in game 
+        SpawnBall();
+    }
+#endregion
+
+#region Public methods
+    public void SpawnBall()
+    {
+        // make sure we don't spawn into a collision
+        if(Physics2D.OverlapArea(spawnLocationMin, spawnLocationMax) == null)
+        {
+            retrySpawn = false;
+            Instantiate(prefabBall);
+        }
+        else
+        {
+            retrySpawn = true;
+        }
+    }
+#endregion
+```
+
+# Ball script call BallSpawner
+Have the Ball script call the BallSpawner method just before it destroys itself. You need to get access to the BallSpawner script using GetComponent method.
+```
+#region Unity method
+    void Update()
+    {
+        // die when time is up
+        if(deathTimer.Finished)
+        {
+            Camera.main.GetComponent<BallSpawner>().SpawnBall();
+            Destroy(gameObject);
+        }
+    }
+#endregion
+```
 
