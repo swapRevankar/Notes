@@ -199,4 +199,40 @@ Have the Ball script call the BallSpawner method just before it destroys itself.
     }
 #endregion
 ```
+---
+# Fix ball spawning unfairness
+For this step, you are making the ball wait for a second before they start moving. This actually gives player a chance to "get set" at the start of the game, and also make it more fair when a new ball is spawned into scene. 
+```
+#region Unity method
+    void Start()
+    {
+        // start move timer
+        moveTimer = gameObject.AddComponent<Timer>();
+        moveTimer.Duration = 1;
+        moveTimer.Run();
+    }
+
+    void Update()
+    {
+        // move when time is uup
+        if(moveTimer.Finished)
+        {
+            moveTimer.Stop();
+            StartMoving();
+        }
+    }
+#endregion
+
+#region Private methods
+    void StartMoving()
+    {
+        // get the ball moving
+        float angle = -90* Mathf.Deg2Rad;
+        Vector2 force = new Vector2(
+            ConfigurationUtils.BallImpulseForce * Mathf.Cos(angle), 
+            ConfigurationUtils.BallImpulseForce * Mathf.Sin(angle));
+        GetComponent<Rigidbody2D>().AddForce(force);
+    }
+#endregion
+```
 
