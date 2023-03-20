@@ -253,4 +253,75 @@ void OnBecameInvisible()
 }
 ```
 ---
+# Spawn a new ball every 5 to 10 seconds
+### ConfigurationUtils class
+Add properties to ConfigurationUtils class for minimum and maximum spawn times. I used 5 seconds for min spawn seconds and 10 sec for the max spawn seconds. Make the properties public so BallSpawner class will be able to access these values.
+```
+#region Properties
+    // Gets minimum number of seconds for a ball spawn
+    public static float MinSpawnSeconds
+    {
+        get{return 5;}
+    }
+
+    // Gets maximum number for seconds for a ball spawn 
+    public static float MaxSpawnSeconds
+    {
+        get{return 10;}
+    }
+#endregion
+``` 
+
+### Timer component to BallSpawner
+Add a Timer component to BallSpawner and run the timer with random duration between the min and max spawn seconds when the BallSpawner is added to the scene. I wrote a separate method to provide the spawn delay.
+```
+#region Fields
+    // spawn support
+    Timer spawnTimer;
+    float spawnRange;
+#endregion
+
+#region Unity method
+    void Start()
+    {
+        // initialize and start spawn timer
+        spawnRange = ConfigurationUtils.MaxSpawnSeconds -
+            ConfigurationUtils.MinSpawnSeconds;
+        spawnTimer = gameObject.AddComponent<Timer>();
+        spawnTimer.Duration = GetSpawnDelay();
+        spawnTimer.Run();
+    }
+
+#endregion
+
+#region Private method
+// Gets the spawn delay in seconds for the next ball spawn
+float GetSpawnDelay()
+{
+    return ConfigurationUtils.MinSpawnSeconds + 
+        Random.value * spawnRange;
+
+}
+#endregion
+```
+
+### Spawn ball in Update method
+Add code to Update method to spawn a new ball when the spawn timer finishes and restart the spawn timer with a new random time.
+```
+#region Unity method
+    void Update()
+    {
+        // spawn ball and restart timer as appropriate
+        if(spawnTImer.Finished)
+        {
+            // don't stack with a spawn still pending
+            retrySpawn = false;
+            SpawnBall();
+            spawnTimer.Duration = GetSpawnDelay();
+            spawnTimer.Run();
+        }
+
+    }
+#endregion
+```
 
