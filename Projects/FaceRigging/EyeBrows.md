@@ -1,28 +1,61 @@
 # Eye brow setup
-- Create multiply node name L_main_rotate_multiplyDivide
-- Base controller rotate Z to Multiply input1 X and Y
-- PSD rotate_1 to Multiply input2 X and rotate_2 to Multiply input2 Y
-- Create 3 add double linear node name them L_main_rotate_1_addDoubleLinear, L_main_rotate_2_addDoubleLinear, L_brow_sum_in_x_addDoubleLinear
-- L_main_rotate_multiplyDivide.outputX to L_main_rotate_1_addDoubleLinear.input1
-- L_brow_1_joint_ctlr.translateY to L_main_rotate_1_addDoubleLinear.input2
-- L_main_rotate_multiplyDivide.outputY to L_main_rotate_2_addDoubleLinear.input1
-- L_brow_in_joint_ctlr.translateY to L_main_rotate_2_addDoubleLinear.input2
-- L_brow_1_joint_ctlr.translateX to L_brow_sum_in_x_addDoubleLinear.input1
-- L_brow_in_joint_ctlr.translateX to L_brow_sum_in_x_addDoubleLinear.input2
-- L_main_rotate_1_addDoubleLinear.output to L_brow_sum_plusMinusAverage.input3D[1].input3Dx
-- L_brow_2_joint_ctlr.translateY to L_brow_sum_plusMinusAverage.input3D[1].input3Dy
-- L_brow_3_joint_ctlr.translateY to L_brow_sum_plusMinusAverage.input3D[1].input3Dz
-- L_brow_base_joint_ctlr.translateY to L_brow_sum_plusMinusAverage.input3D[0].input3Dxyz
+- Create Multiply node L_main_rotate_multiplyDivide
+- connectAttr -f L_brow_base_joint_ctlr.rotateZ L_main_rotate_multiplyDivide.input1X
+- connectAttr -f L_brow_base_joint_ctlr.rotateZ L_main_rotate_multiplyDivide.input1Y;
+- Create 3 add double liner node and one mult double liner L_main_rotate_1_addDoubleLinear, L_brow_rotate_multDoubleLinear, L_brow_sum_in_x_addDoubleLinear, L_main_rotate_2_addDoubleLinear
+- connectAttr -f L_main_rotate_multiplyDivide.outputX L_main_rotate_1_addDoubleLinear.input1
+- connectAttr -f L_brow_1_joint_ctlr.translateY L_main_rotate_1_addDoubleLinear.input2
+- connectAttr -f L_brow_1_joint_ctlr.rotateZ L_brow_rotate_multDoubleLinear.input1
+- Create attribute on psd named rotateBrow
+- connectAttr -f brow_psd_data.rotateBrow L_brow_rotate_multDoubleLinear.input2
+- connectAttr -f L_brow_1_joint_ctlr.translateX L_brow_sum_in_x_addDoubleLinear.input1
+- connectAttr -f L_brow_in_joint_ctlr.translateX L_brow_sum_in_x_addDoubleLinear.input2
+- connectAttr -f L_main_rotate_multiplyDivide.outputY L_main_rotate_2_addDoubleLinear.input1
+- connectAttr -f L_brow_in_joint_ctlr.translateY L_main_rotate_2_addDoubleLinear.input2
+- Create Sum node L_brow_sum_plusMinusAverage
+- connectAttr -f L_main_rotate_1_addDoubleLinear.output L_brow_sum_plusMinusAverage.input3D[1].input3Dx
+- connectAttr -f L_brow_base_joint_ctlr.translateY L_brow_sum_plusMinusAverage.input3D[0].input3Dx;
+-connectAttr -f L_brow_base_joint_ctlr.translateY L_brow_sum_plusMinusAverage.input3D[0].input3Dy;
+- connectAttr -f L_brow_base_joint_ctlr.translateY L_brow_sum_plusMinusAverage.input3D[0].input3Dz;
+- connectAttr -f L_brow_2_joint_ctlr.translateY L_brow_sum_plusMinusAverage.input3D[1].input3Dy;
+- connectAttr -f L_brow_3_joint_ctlr.translateY L_brow_sum_plusMinusAverage.input3D[1].input3Dz;
+- Create add double linear L_brow_rotate_addDoubleLinear
+- connectAttr -f L_brow_sum_plusMinusAverage.output3Dx L_brow_rotate_addDoubleLinear.input1;
+- connectAttr -f L_brow_rotate_multDoubleLinear.output L_brow_rotate_addDoubleLinear.input2;
 - Create add double linear L_brow_sum_in_y_addDoubleLinear
-- L_brow_sum_plusMinusAverage.output3D.output3Dx to L_brow_sum_in_y_addDoubleLinear.input1
-- L_main_rotate_2_addDoubleLinear.output to L_brow_sum_in_y_addDoubleLinear.input2
-- Create Multiply node L_brow_in_multiplyDivide
-- L_brow_sum_in_y_addDoubleLinear.output to multiplyDivide1.input1.input1X
-- L_brow_sum_in_x_addDoubleLinear.output to L_brow_in_multiplyDivide.input1.input1Y
-- Add attribute to PSD named X and Y and set it to -10 10 
-- brow_psd_data.X to L_brow_in_multiplyDivide.input2.input2X
-- brow_psd_data.Y to L_brow_in_multiplyDivide.input2.input2Y
-- L_brow_in_multiplyDivide.output.outputX to L_brow_in_locator.rotate.rotateX
-- L_brow_in_multiplyDivide.output.outputY to L_brow_in_locator.rotate.rotateY
+- connectAttr -f L_brow_sum_plusMinusAverage.output3Dx L_brow_sum_in_y_addDoubleLinear.input1;
+- connectAttr -f L_main_rotate_2_addDoubleLinear.output L_brow_sum_in_y_addDoubleLinear.input2;
+- Create Multiply L_brow_2_multiplyDivide
+- connectAttr -f L_brow_sum_plusMinusAverage.output3Dy L_brow_2_multiplyDivide.input1X;
+- Add attribute to PSD X and Y set to -10 10
+- connectAttr -f brow_psd_data.X L_brow_2_multiplyDivide.input2X;
+- connectAttr -f brow_psd_data.Y L_brow_2_multiplyDivide.input2Y;
+- connectAttr -f L_brow_2_joint_ctlr.translateX L_brow_2_multiplyDivide.input1Y;
+- Create multiply node L_brow_3_multiplyDivide
+- connectAttr -f L_brow_sum_plusMinusAverage.output3Dz L_brow_3_multiplyDivide.input1X;
+- connectAttr -f brow_psd_data.X L_brow_3_multiplyDivide.input2X;
+- connectAttr -f brow_psd_data.Y L_brow_3_multiplyDivide.input2Y;
+- connectAttr -f L_brow_3_joint_ctlr.translateX L_brow_3_multiplyDivide.input1Y;
+- Create Multiply L_brow_1_multiplyDivide
+- connectAttr -f L_brow_rotate_addDoubleLinear.output L_brow_1_multiplyDivide.input1X;
+- connectAttr -f L_brow_1_joint_ctlr.translateX L_brow_1_multiplyDivide.input1Y;
+- connectAttr -f brow_psd_data.X L_brow_1_multiplyDivide.input2X;
+- connectAttr -f brow_psd_data.Y L_brow_1_multiplyDivide.input2Y;
+- connectAttr -f L_brow_2_multiplyDivide.outputX L_brow_2_locator.rotateX;
+- connectAttr -f L_brow_2_multiplyDivide.outputY L_brow_2_locator.rotateY;
+- connectAttr -f L_brow_3_multiplyDivide.outputX L_brow_3_locator.rotateX;
+- connectAttr -f L_brow_3_multiplyDivide.outputY L_brow_3_locator.rotateY;
+- Create Multiply L_brow_in_multiplyDivide
+- connectAttr -f brow_psd_data.X L_brow_in_multiplyDivide.input2X;
+- connectAttr -f brow_psd_data.Y L_brow_in_multiplyDivide.input2Y;
+- connectAttr -f L_brow_sum_in_y_addDoubleLinear.output L_brow_in_multiplyDivide.input1X;
+- connectAttr -f L_brow_sum_in_x_addDoubleLinear.output L_brow_in_multiplyDivide.input1Y;
+- connectAttr -f L_brow_1_multiplyDivide.outputX L_brow_1_locator.rotateX;
+- connectAttr -f L_brow_1_multiplyDivide.outputY L_brow_1_locator.rotateY;
+- connectAttr -f L_brow_in_multiplyDivide.outputX L_brow_in_locator.rotateX;
+- connectAttr -f L_brow_in_multiplyDivide.outputY L_brow_in_locator.rotateY;
+
+
+
 
 
